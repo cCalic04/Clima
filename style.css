@@ -1,0 +1,50 @@
+body {
+  background-color: blue;
+  color: white;
+}
+.todo {
+margin: 10%;
+flex-direction: column;
+width: 10vw;
+height: 10vh;
+display: flex;
+
+}
+
+.izq {
+    margin: 10%;
+position: absolute;
+left: 0%;
+top: 0%;
+width: 10vw;
+height: 10vh;
+display: flex;
+
+}
+.der {
+    margin: 10%;
+    position: absolute;
+    left: 50%;
+    top: 0%;
+    width: 10vw;
+    height: 10vh;
+    display: flex;
+
+}
+
+.cartasizq {
+    position: absolute;
+    top:600%;
+    flex-direction: row;
+    display: flex;
+    margin: 10%;
+
+
+}
+.cartasder {
+    position: absolute;
+    top:600%;
+    flex-direction: row;
+    display: flex;
+    margin: 10%;
+}
