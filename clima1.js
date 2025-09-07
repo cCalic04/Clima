@@ -2,7 +2,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // --- CONFIG ---
-  const ciudad = 'Bucaramanga';
+  const ciudad = 'Bogotá';
   const llaveApi = 'fb08d9cd120c13609db1d162c71ed5d0';
   const llaveApi1 = 'f5098d4e3d7f2be89ac7e65039344e42';
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(ciudad)}&appid=${llaveApi}&lang=es`;
