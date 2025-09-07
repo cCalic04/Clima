@@ -103,15 +103,14 @@ body {
 }
 
 .back {
-  background: #c7e400;
   color: #000;
   transform: rotateY(180deg);
   flex-direction: column;
-  padding: 0.5rem;
+
 }
 
 .back p { margin: 0.3rem 0; text-align: center; }
-.back img { max-width: 80%; margin: 0.5rem 0; }
+.back img { max-width: 100%; max-height:100%; margin: 0.5rem 0; }
 
 #texto{
     display: none;
@@ -183,7 +182,7 @@ font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-style: normal;
   color:#000;
-  max-width: 60 vw;
+  max-width: 60vw;
 }
 
 @keyframes agitado {
@@ -202,4 +201,21 @@ font-family: "Montserrat", sans-serif;
   100% {
     transform: rotate(0deg);
   }
+}
+
+#simbolo{
+ width: 280vw;
+ height: 320vh;
+}
+#simbolo1{
+ width: 280vw;
+ height: 320vh;
+}
+#titulo2{
+ width: 280vw;
+ height: 320vh;
+}
+#titulo3{
+ width: 280vw;
+ height: 320vh;
 }
