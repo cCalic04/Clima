@@ -1,50 +1,147 @@
+/* === reset === */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+/* === base === */
 body {
-  background-color: blue;
-  color: white;
+  background-color: #1e1b10;
+  color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
+
 .todo {
-margin: 10%;
-flex-direction: column;
-width: 10vw;
-height: 10vh;
-display: flex;
-
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* left / right */
+  gap: 2rem;
+  width: 100%;
+  max-width: 1920px;
+  height: 100%;
 }
 
+/* === left side: character + prediction === */
 .izq {
-    margin: 10%;
-position: absolute;
-left: 0%;
-top: 0%;
-width: 10vw;
-height: 10vh;
-display: flex;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
 }
+
+.personaje img {
+  max-height: 80vh;
+  height: 75vh;
+  width: 60vgh;
+  display: block;
+}
+
+.prediccion {
+  text-align: center;
+}
+
+.prediccion p {
+  margin: 0.5rem 0;
+}
+
+#boton1 {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #c7e400;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* === right side: stacked card rows === */
 .der {
-    margin: 10%;
-    position: absolute;
-    left: 50%;
-    top: 0%;
-    width: 10vw;
-    height: 10vh;
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem; /* controls space between top and bottom rows */
+  align-items: center;
+}
+
+.fila-cartas {
+  display: flex;
+  gap: 1rem; /* space between cards within a row */
+}
+
+/* === card visuals / flip === */
+.contenedor {
+  perspective: 1000px;
+}
+
+.card {
+  position: relative;
+  width: 250px;
+  height: 320px;
+  transform-style: preserve-3d;
+  
+}
+
+.card:hover { transform: rotateY(180deg); }
+
+.front, .back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.front {
+  background: #000;
+  color: #fff;
+  font-family: Lucida, monospace;
+  font-size: 34px;
+  text-align: center;
+}
+
+.back {
+  background: #c7e400;
+  color: #000;
+  transform: rotateY(180deg);
+  flex-direction: column;
+  padding: 0.5rem;
+}
+
+.back p { margin: 0.3rem 0; text-align: center; }
+.back img { max-width: 80%; margin: 0.5rem 0; }
+
+#texto{
+    display: none;
+font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+#texto1{
+    display: none;
+font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+h4{
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 900;
+  font-style: normal;
+text-shadow: 2px 2px 2px #000000
 
 }
 
-.cartasizq {
-    position: absolute;
-    top:600%;
-    flex-direction: row;
-    display: flex;
-    margin: 10%;
-
-
-}
-.cartasder {
-    position: absolute;
-    top:600%;
-    flex-direction: row;
-    display: flex;
-    margin: 10%;
+#prediccionTexto{
+        display: none;
+font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  text-shadow: 2px 2px 2px #000000
 }

@@ -1,102 +1,196 @@
-const ciudad = 'bogota';
+/* clima.js - weather + typewriter + hover copeton + background */
 
-// La llave que identifica al usuario que esta pidiendo los datos
-// Pueden usar mi llave gratuita o crear una propia en https://openweathermap.org/
-const llaveApi = 'fb08d9cd120c13609db1d162c71ed5d0';
-// La dirección que contiene los datos en tiempo real
-const puntoDatos =  'https://api.openweathermap.org/data/2.5/weather';
-const url = `${puntoDatos}?q=${ciudad}&appid=${llaveApi}`;
+document.addEventListener("DOMContentLoaded", () => {
+  // --- CONFIG ---
+  const ciudad = 'Bucaramanga';
+  const llaveApi = 'fb08d9cd120c13609db1d162c71ed5d0';
+  const llaveApi1 = 'f5098d4e3d7f2be89ac7e65039344e42';
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(ciudad)}&appid=${llaveApi}&lang=es`;
+  const url1 = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(ciudad)}&appid=${llaveApi1}&lang=es`;
 
-// La lógica con la que mostramos los íconos en la pantalla:
-const contenedor = document.getElementById("simbolo");
-const descripcion = document.getElementById("texto")
+  const climas = {
+    '2xx': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa2.png',
+    '3xx': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa3.png',
+    '5xx': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa4.png',
+    '6xx': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa5.png',
+    '7xx': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa6.png',
+    '800': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa8.png',
+    '80x': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa9.png'
+  };
 
-async function buscar() {
-  const datos = await fetch(url).then(respuesta => respuesta.json());
-  console.log(datos);
-  const codigoIcono = datos.weather[0].icon;
-  contenedor.src = `https://openweathermap.org/img/wn/${codigoIcono}@2x.png`;
-  descripcion.innerText = datos.weather[0].description
-} 
+  // --- BACKGROUND MAPPING ---
+  const bgClimas = {
+    '2xx': '#4a4a7c', // thunderstorm
+    '3xx': '#4a646aff', // drizzle
+    '5xx': '#4c6b8b', // rain
+    '6xx': '#b0c4de', // snow
+    '7xx': '#707177ff', // fog/mist
+    '800': '#1355a5ff', // clear
+    '80x': '#6e6363ff'  // clouds
+  };
 
-buscar();
+  const $id = id => document.getElementById(id) || null;
 
-
-
-//cartas
-const imagenes = [
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/hangedman.png?v=1726029380354",
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/tower.png?v=1726029377877",
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/death.png?v=1726029375410",
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/justiec.png?v=1726029371776",
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/wheel.png?v=1726029368886",
-    "https://cdn.glitch.global/b9547f30-d27e-4ca3-8ef2-267d73725f75/chariot.png?v=1726041582366",
-  ];
-  //titulo
-  const cabecera = [
-    "0",
-  ];
-  //muerte
-  const titulos = [
-    "1",
-  ];
-  //condiciones
-  const titulos1 = [
-    "2",
-  ];
-  //tu vida
-  const titulos2 = [
-    "3",
-  ];
-  //Precauciones
-  const titulos3 = [
-    "4",
-  ];
-  
-  
-  
-  const header = document.getElementById("cabecera");
-  const titulo = document.getElementById("titulo");
-  const titulo1 = document.getElementById("titulo1");
-  const titulo2 = document.getElementById("titulo2");
-  const titulo3 = document.getElementById("titulo3");
-  const boton = document.getElementById("boton1");
-  const imagen = document.getElementById("foto");
-  const imagen1 = document.getElementById("foto1");
-  const imagen2 = document.getElementById("foto2");
-  
-  
-  function numeroRandom(min, max) {
-    return Math.ceil(Math.random() * (max - min) + min - 1);
+  function getCategoryUrlFromId(id) {
+    id = Number(id);
+    if (Number.isNaN(id)) return null;
+    if (id >= 200 && id < 300) return climas['2xx'];
+    if (id >= 300 && id < 400) return climas['3xx'];
+    if (id >= 500 && id < 600) return climas['5xx'];
+    if (id >= 600 && id < 700) return climas['6xx'];
+    if (id >= 700 && id < 800) return climas['7xx'];
+    if (id === 800) return climas['800'];
+    if (id > 800) return climas['80x'];
+    return null;
   }
-  
-  function generarPrediccion() {
-    const indiceHeader = numeroRandom(0, cabecera.length);
-    const indiceTitulo = numeroRandom(0, titulos.length);
-    const indiceTitulo1 = numeroRandom(0, titulos1.length);
-    const indiceTitulo2 = numeroRandom(0, titulos2.length);
-    const indiceTitulo3 = numeroRandom(0, titulos3.length);
-    const fotos = numeroRandom(0, imagenes.length);
-    const fotos1 = numeroRandom(0, imagenes.length);
-    const fotos2 = numeroRandom(0, imagenes.length);
-  
-    header.innerText = cabecera[indiceHeader];
-    titulo.innerText = titulos[indiceTitulo];
-    titulo1.innerText = titulos1[indiceTitulo1];
-    titulo2.innerText = titulos2[indiceTitulo2];
-    titulo3.innerText = titulos3[indiceTitulo3];
-    imagen.src = imagenes[fotos];
-    imagen1.src = imagenes[fotos1];
-    imagen2.src = imagenes[fotos2];
+
+  function testImageLoads(url) {
+    return new Promise(resolve => {
+      if (!url) return resolve(false);
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
   }
-  
-  boton.addEventListener("click", function () {
-    generarPrediccion();
-  });
-  
-  generarPrediccion();
-  
-  const audio = document.getElementById("musica");
-  audio.volume = 0.1; 
-  const audio1 = document.getElementById("musica1");
-  audio1.volume = 0.1; 
+
+  async function setImageWithFallback(imgElement, categoryUrl, openWeatherIconUrl) {
+    if (!imgElement) return;
+    try {
+      if (categoryUrl && await testImageLoads(categoryUrl)) {
+        imgElement.src = categoryUrl;
+        return;
+      }
+      if (openWeatherIconUrl && await testImageLoads(openWeatherIconUrl)) {
+        imgElement.src = openWeatherIconUrl;
+        return;
+      }
+      imgElement.src = '';
+    } catch (err) {
+      console.error('Image error', err);
+      imgElement.src = '';
+    }
+  }
+
+  // --- TYPEWRITER ---
+  let typingInterval;
+  function typeWriterEffect(text, targetEl) {
+    clearInterval(typingInterval);
+    if (!targetEl) return;
+    targetEl.style.display = 'block';
+    targetEl.innerText = '';
+    let i = 0;
+    typingInterval = setInterval(() => {
+      targetEl.innerText = text.slice(0, i + 1); // preserves spaces
+      i++;
+      if (i >= text.length) clearInterval(typingInterval);
+    }, 50);
+  }
+
+  function eraseEffect(targetEl) {
+    clearInterval(typingInterval);
+    if (!targetEl) return;
+    const erase = () => {
+      if (targetEl.innerText.length > 0) {
+        targetEl.innerText = targetEl.innerText.slice(0, -1);
+        typingInterval = setTimeout(erase, 30);
+      } else {
+        targetEl.style.display = 'none';
+      }
+    };
+    erase();
+  }
+
+  // --- FETCH WEATHER & FORECAST ---
+  async function buscar() {
+    try {
+      const descEl = $id('texto');
+      const descEl1 = $id('texto1');
+      const prediccionTexto = $id('prediccionTexto');
+      const simboloEl = $id('simbolo');
+      const simbolo1El = $id('simbolo1');
+      const todoContainer = document.querySelector('.todo');
+      const todoOriginalBg = todoContainer ? window.getComputedStyle(todoContainer).backgroundColor : '#fff';
+      const copeton = $id('copeton');
+      const copetonOriginalSrc = copeton?.src;
+
+      // Current weather
+      const res = await fetch(url);
+      const datos = await res.json();
+      const curWeather = datos?.weather?.[0] || {};
+      const curId = curWeather.id;
+      const curIconCode = curWeather.icon;
+
+      await setImageWithFallback(simboloEl, getCategoryUrlFromId(curId),
+        curIconCode ? `https://openweathermap.org/img/wn/${curIconCode}@2x.png` : null);
+      if (descEl) descEl.innerText = curWeather.description || '';
+
+      // Forecast
+      const res2 = await fetch(url1);
+      const datos1 = await res2.json();
+      const forecastItem = datos1?.list?.[16] || datos1?.list?.[0] || {};
+      const fWeather = forecastItem.weather?.[0] || {};
+      const fId = fWeather.id;
+      const fIconCode = fWeather.icon;
+
+      await setImageWithFallback(simbolo1El, getCategoryUrlFromId(fId),
+        fIconCode ? `https://openweathermap.org/img/wn/${fIconCode}@2x.png` : null);
+      if (descEl1) descEl1.innerText = fWeather.description || '';
+
+      // --- PREPARE MESSAGES ---
+      const mensajes = {
+        card1: `el clima actual: ${curWeather.description || ''}`,
+        card2: `el clima de mañana: ${fWeather.description || ''}`
+      };
+
+      // --- COPETON HOVER IMAGES ---
+      const copetonHoverImages = [
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif', // card1
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif'  // card2
+      ];
+
+      // --- CARD HOVER EVENTS ---
+      const cards = document.querySelectorAll(".der .fila-cartas .contenedor .card");
+      cards.forEach((card, i) => {
+        const key = `card${i+1}`;
+
+        card.addEventListener("mouseenter", () => {
+          // typewriter
+          typeWriterEffect(mensajes[key] || '', prediccionTexto);
+
+          // copeton image
+          if (copeton && copetonHoverImages[i]) {
+            copeton.src = copetonHoverImages[i];
+          }
+
+          // background
+          let code;
+          if (key === 'card1') code = curId;
+          if (key === 'card2') code = fId;
+          let bgKey = null;
+          if (code >= 200 && code < 300) bgKey = '2xx';
+          else if (code >= 300 && code < 400) bgKey = '3xx';
+          else if (code >= 500 && code < 600) bgKey = '5xx';
+          else if (code >= 600 && code < 700) bgKey = '6xx';
+          else if (code >= 700 && code < 800) bgKey = '7xx';
+          else if (code === 800) bgKey = '800';
+          else if (code > 800) bgKey = '80x';
+
+          if (todoContainer && bgKey) todoContainer.style.backgroundColor = bgClimas[bgKey] || todoOriginalBg;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          eraseEffect(prediccionTexto);
+          if (copeton) copeton.src = copetonOriginalSrc;
+          if (todoContainer) todoContainer.style.backgroundColor = todoOriginalBg;
+        });
+      });
+
+    } catch (err) {
+      console.error('Weather fetch error:', err);
+    }
+  }
+
+  // --- RUN ---
+  buscar();
+});
