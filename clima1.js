@@ -1,7 +1,6 @@
-/* clima.js - weather + typewriter + hover copeton + background */
+/* clima.js - weather + typewriter + hover copeton + background + outfits + omens */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- CONFIG ---
   const ciudad = 'Bogotá';
   const llaveApi = 'fb08d9cd120c13609db1d162c71ed5d0';
   const llaveApi1 = 'f5098d4e3d7f2be89ac7e65039344e42';
@@ -18,61 +17,57 @@ document.addEventListener("DOMContentLoaded", () => {
     '80x': 'https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/mymeloa9.png'
   };
 
-  // --- BACKGROUND MAPPING ---
   const bgClimas = {
-    '2xx': '#4a4a7c', // thunderstorm
-    '3xx': '#4a646aff', // drizzle
-    '5xx': '#4c6b8b', // rain
-    '6xx': '#b0c4de', // snow
-    '7xx': '#707177ff', // fog/mist
-    '800': '#1355a5ff', // clear
-    '80x': '#6e6363ff'  // clouds
+    '2xx': '#4a4a7c',
+    '3xx': '#4a646aff',
+    '5xx': '#4c6b8b',
+    '6xx': '#b0c4de',
+    '7xx': '#707177ff',
+    '800': '#1355a5ff',
+    '80x': '#6e6363ff'
   };
+
+  // Outfit suggestions per weather category
+  const outfits = {
+    '2xx': { text: "El cielo está negro y lleno de destellos.\n Quédate en casa o usa impermeable y botas.\n Aprovecha esta oportunidad de pausa para ver hacia adentro.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit2.png" },
+    '3xx': { text: "Las nubes se abrieron y la llovizna tomó el turno.\n En este clima, el paraguas es la mejor inversión.\n Después de la lluvia, todo suele verse más claro.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit3.png" },
+    '5xx': { text: "El cielo se rompió y la lluvia tomó el turno.\n Impermeable y zapatos resistentes son ideales.\n Abre tu alma a la renovación y deja que el agua se lleve todo.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit4.png" },
+    '6xx': { text: "Nieve. Abrígate con chaqueta gruesa, gorro y guantes.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit5.png" },
+    '7xx': { text: " La neblina cubre el paisaje y todo parece difuso.\n Una bufanda cómoda hace la diferencia hoy.\n  Con neblina, el día suele guardar algo inesperado.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit6.png" },
+    '800': { text: "El cielo está despejado, el sol brilla sin pausa.\n Gafas oscuras y ropa ligera son la mejor elección.\n Un día soleado suele traer energía renovada.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit7.png" },
+    '80x': { text: "El sol está de descanso, el cielo se viste de gris.\n Un suéter ligero nunca sobra en un día así.\n Cuando se nublan los cielos, siempre se acerca un cambio.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/outfit8.png" }
+  };
+
+  // Omens (randomized)
+  const omens = [
+    { text: "Hoy deberías tomar una ruta distinta a tu destino.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen1.png" },
+    { text: "Recuerda saludar a esa persona importante, lo apreciará.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen2.png" },
+    { text: "Cuidado con los huecos en el anden.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen3.png" },
+    { text: "Ojo con las goteras.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen4.png" },
+    { text: "Hoy no es un buen día para hablar con extraños.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen5.png" },
+    { text: "Parece que es momento de tener esa conversación incomoda.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen6.png" },
+    { text: "Preparate para una despedida dolorosa.", img: "https://raw.githubusercontent.com/cCalic04/MyMeloApoyo/main/omen7.png" }
+  ];
 
   const $id = id => document.getElementById(id) || null;
 
-  function getCategoryUrlFromId(id) {
-    id = Number(id);
-    if (Number.isNaN(id)) return null;
-    if (id >= 200 && id < 300) return climas['2xx'];
-    if (id >= 300 && id < 400) return climas['3xx'];
-    if (id >= 500 && id < 600) return climas['5xx'];
-    if (id >= 600 && id < 700) return climas['6xx'];
-    if (id >= 700 && id < 800) return climas['7xx'];
-    if (id === 800) return climas['800'];
-    if (id > 800) return climas['80x'];
+  function getCategory(id) {
+    if (id >= 200 && id < 300) return '2xx';
+    if (id >= 300 && id < 400) return '3xx';
+    if (id >= 500 && id < 600) return '5xx';
+    if (id >= 600 && id < 700) return '6xx';
+    if (id >= 700 && id < 800) return '7xx';
+    if (id === 800) return '800';
+    if (id > 800) return '80x';
     return null;
   }
 
-  function testImageLoads(url) {
-    return new Promise(resolve => {
-      if (!url) return resolve(false);
-      const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = url;
-    });
-  }
-
-  async function setImageWithFallback(imgElement, categoryUrl, openWeatherIconUrl) {
+  async function setImage(imgElement, url) {
     if (!imgElement) return;
-    try {
-      if (categoryUrl && await testImageLoads(categoryUrl)) {
-        imgElement.src = categoryUrl;
-        return;
-      }
-      if (openWeatherIconUrl && await testImageLoads(openWeatherIconUrl)) {
-        imgElement.src = openWeatherIconUrl;
-        return;
-      }
-      imgElement.src = '';
-    } catch (err) {
-      console.error('Image error', err);
-      imgElement.src = '';
-    }
+    imgElement.src = url || '';
   }
 
-  // --- TYPEWRITER ---
+  // TYPEWRITER
   let typingInterval;
   function typeWriterEffect(text, targetEl) {
     clearInterval(typingInterval);
@@ -81,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     targetEl.innerText = '';
     let i = 0;
     typingInterval = setInterval(() => {
-      targetEl.innerText = text.slice(0, i + 1); // preserves spaces
+      targetEl.innerText = text.slice(0, i + 1);
       i++;
       if (i >= text.length) clearInterval(typingInterval);
     }, 50);
@@ -94,21 +89,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (targetEl.innerText.length > 0) {
         targetEl.innerText = targetEl.innerText.slice(0, -1);
         typingInterval = setTimeout(erase, 30);
-      } else {
-        targetEl.style.display = 'none';
-      }
+      } else { targetEl.style.display = 'none'; }
     };
     erase();
   }
 
-  // --- FETCH WEATHER & FORECAST ---
   async function buscar() {
     try {
-      const descEl = $id('texto');
-      const descEl1 = $id('texto1');
       const prediccionTexto = $id('prediccionTexto');
       const simboloEl = $id('simbolo');
       const simbolo1El = $id('simbolo1');
+      const titulo2El = $id('titulo2');
+      const titulo3El = $id('titulo3');
       const todoContainer = document.querySelector('.todo');
       const todoOriginalBg = todoContainer ? window.getComputedStyle(todoContainer).backgroundColor : '#fff';
       const copeton = $id('copeton');
@@ -120,63 +112,64 @@ document.addEventListener("DOMContentLoaded", () => {
       const curWeather = datos?.weather?.[0] || {};
       const curId = curWeather.id;
       const curIconCode = curWeather.icon;
+      const curCat = getCategory(curId);
 
-      await setImageWithFallback(simboloEl, getCategoryUrlFromId(curId),
-        curIconCode ? `https://openweathermap.org/img/wn/${curIconCode}@2x.png` : null);
-      if (descEl) descEl.innerText = curWeather.description || '';
+      await setImage(simboloEl, climas[curCat]);
 
       // Forecast
       const res2 = await fetch(url1);
       const datos1 = await res2.json();
-      const forecastItem = datos1?.list?.[16] || datos1?.list?.[0] || {};
+      const forecastItem = datos1?.list?.[8] || datos1?.list?.[0] || {};
       const fWeather = forecastItem.weather?.[0] || {};
       const fId = fWeather.id;
       const fIconCode = fWeather.icon;
+      const fCat = getCategory(fId);
 
-      await setImageWithFallback(simbolo1El, getCategoryUrlFromId(fId),
-        fIconCode ? `https://openweathermap.org/img/wn/${fIconCode}@2x.png` : null);
-      if (descEl1) descEl1.innerText = fWeather.description || '';
+      await setImage(simbolo1El, climas[fCat]);
 
-      // --- PREPARE MESSAGES ---
+      // MESSAGES
       const mensajes = {
-        card1: `el clima actual: ${curWeather.description || ''}`,
-        card2: `el clima de mañana: ${fWeather.description || ''}`
+        card1: `El clima actual: ${curWeather.description || ''}`,
+        card2: `El clima de mañana: ${fWeather.description || ''}`
       };
 
-      // --- COPETON HOVER IMAGES ---
       const copetonHoverImages = [
-        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif', // card1
-        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif'  // card2
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif',
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif',
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif',
+        'https://raw.githubusercontent.com/cCalic04/Clima/refs/heads/main/copetonhabla.gif'
       ];
 
-      // --- CARD HOVER EVENTS ---
       const cards = document.querySelectorAll(".der .fila-cartas .contenedor .card");
       cards.forEach((card, i) => {
-        const key = `card${i+1}`;
-
         card.addEventListener("mouseenter", () => {
-          // typewriter
-          typeWriterEffect(mensajes[key] || '', prediccionTexto);
+          // Card 1 & 2: weather info
+          if (i < 2) typeWriterEffect(mensajes[`card${i+1}`], prediccionTexto);
 
-          // copeton image
-          if (copeton && copetonHoverImages[i]) {
-            copeton.src = copetonHoverImages[i];
+          // Card 3: outfit based on current weather
+          if (i === 2 && outfits[curCat]) {
+            typeWriterEffect(outfits[curCat].text, prediccionTexto);
+            titulo2El.querySelector('img').src = outfits[curCat].img;
           }
 
-          // background
-          let code;
-          if (key === 'card1') code = curId;
-          if (key === 'card2') code = fId;
-          let bgKey = null;
-          if (code >= 200 && code < 300) bgKey = '2xx';
-          else if (code >= 300 && code < 400) bgKey = '3xx';
-          else if (code >= 500 && code < 600) bgKey = '5xx';
-          else if (code >= 600 && code < 700) bgKey = '6xx';
-          else if (code >= 700 && code < 800) bgKey = '7xx';
-          else if (code === 800) bgKey = '800';
-          else if (code > 800) bgKey = '80x';
+          // Card 4: random omen
+          if (i === 3) {
+            const omen = omens[Math.floor(Math.random() * omens.length)];
+            typeWriterEffect(omen.text, prediccionTexto);
+            titulo3El.querySelector('img').src = omen.img;
+          }
 
+          // copeton
+          if (copeton && copetonHoverImages[i]) copeton.src = copetonHoverImages[i];
+
+          // background
+          let code = i === 0 ? curId : i === 1 ? fId : null;
+          const bgKey = getCategory(code);
           if (todoContainer && bgKey) todoContainer.style.backgroundColor = bgClimas[bgKey] || todoOriginalBg;
+          console.log('Hover card index:', i);
+console.log('copetonHoverImages[i]:', copetonHoverImages[i]);
+copeton.src = copetonHoverImages[i];
+
         });
 
         card.addEventListener("mouseleave", () => {
@@ -185,12 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
           if (todoContainer) todoContainer.style.backgroundColor = todoOriginalBg;
         });
       });
-
     } catch (err) {
       console.error('Weather fetch error:', err);
     }
   }
 
-  // --- RUN ---
   buscar();
 });
